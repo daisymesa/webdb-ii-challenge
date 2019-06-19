@@ -31,7 +31,7 @@ router.get("/:id", (req, res) => {
         .catch(error => res.status(500).json({ error: error }));
 });
 
-// CREATE
+// UPDATE
 router.post('/', (req, res) => {
     const zoo = req.body;
     const { name } = req.body;
@@ -47,6 +47,25 @@ router.post('/', (req, res) => {
     } else {
         res.status(400).json({ error: 'Zoo name is invalid' })
     }
+})
+
+// CREATE
+router.put('/:id', (req, res) => {
+    const changes = req.body;
+    const id = req.params.id;
+    db('zoos')
+    .where({ id: id })
+    .update(changes)
+    .then(count => {
+        if(count) {
+            res.status(200).json({ count })
+        } else {
+            res.status(404).json({ error: 'Zoo ID not found'})
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ error: error })
+    })
 })
 
 
